@@ -50,6 +50,19 @@ app.get('/api/:site/:query', celebrate({
         else if (site === 'giphy') {
             response = await gifServiceInstance.giphy(query);
         }
+        const mongoServiceInstance = new mongoService(connection);
+        let savedSearch = await mongoServiceInstance.fetch(
+            site,
+            query
+        );
+        if (savedSearch.status === 200 && savedSearch.count > 0) {
+            response.saved = savedSearch.data.map((data) => {
+                return data.links;
+            });
+        }
+        else {
+            response.saved = null;
+        }
         if (response.status === 200) {
             return res.json(response).status(200);
         } else {

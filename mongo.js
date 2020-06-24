@@ -24,4 +24,22 @@ module.exports = class mongoService {
         }
     }
 
+    async fetch(site, query) {
+
+        try {
+            let search = this.mongoose.model('searches', searchSchema);
+            let response = await search.find({ site, query });
+            return {
+                status: 200,
+                data: response,
+                count: response.length
+            };
+        } catch (err) {
+            return {
+                status: err.status || 400,
+                message: err.message,
+            };
+        }
+    }
+
 };
