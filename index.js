@@ -26,8 +26,16 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-app.get('/api/:site/:query', celebrate({
-    params: Joi.object({
+app.get("/", async (req, res) => {
+    res.render("index");
+});
+
+app.get("/test", async (req, res) => {
+    console.log(req.query)
+});
+
+app.get('/api/search', celebrate({
+    query: Joi.object({
         site: Joi.string()
             .valid('tenor')
             .valid('giphy')
@@ -41,7 +49,7 @@ app.get('/api/:site/:query', celebrate({
         .label('search-api'),
 }),
     async (req, res, next) => {
-        const { site, query } = req.params;
+        const { site, query } = req.query;
         let response = null;
         const gifServiceInstance = new gifService();
         if (site === 'tenor') {
@@ -49,6 +57,10 @@ app.get('/api/:site/:query', celebrate({
         }
         else if (site === 'giphy') {
             response = await gifServiceInstance.giphy(query);
+        }
+        response.search = {
+            site,
+            query
         }
         const mongoServiceInstance = new mongoService(connection);
         let savedSearch = await mongoServiceInstance.fetch(
@@ -64,7 +76,10 @@ app.get('/api/:site/:query', celebrate({
             response.saved = null;
         }
         if (response.status === 200) {
-            return res.json(response).status(200);
+            // return res.json(response).status(200);
+            res.render("index", {
+                response: response
+            });
         } else {
             next(response);
         }

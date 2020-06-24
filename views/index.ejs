@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <div class="a1">
+        <div class="container center-align">
+            <form class="col s12" action="/api/search" method="get">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select autocomplete="off" name="site" id="site" required>
+                            <option value="" disabled selected>Choose your website</option>
+                            <option value="tenor">Tenor</option>
+                            <option value="giphy">Giphy</option>
+                        </select>
+                        <label>
+                            <span class="black-text">Website</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="Enter search query" id="query" name="query" type="text" class="validate"
+                            required>
+                        <label for="query">
+                            <span class="black-text">Search query</span>
+                        </label>
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">Search
+                </button>
+            </form>
+            <% if(typeof response !='undefined' ){ %>
+            <% if(response.status === 200 && response.data.length > 0 ){ %>
+
+            <form action="/api/save" method="post">
+
+                <ul class="collection center-align">
+                    <% response.data.forEach((link)=>{ %>
+                    <li class="collection-item">
+                        <div class="center-align">
+                            <img class="responsive-img" width="auto" src="<%= link %>">
+                        </div>
+                    </li>
+                    <% }) %>
+                </ul>
+
+                <input type="hidden" name="site" value="<%= response.search.site %>" />
+                <input type="hidden" name="query" value="<%= response.search.query %>" />
+                <div class="center-align">
+                    <button class="btn waves-effect waves-light" type="submit">Save
+                    </button>
+                </div>
+            </form>
+            <% } %>
+            <% } %>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
+    </script>
+</body>
+
+</html>
