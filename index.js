@@ -30,10 +30,6 @@ app.get("/", async (req, res) => {
     res.render("index");
 });
 
-app.get("/test", async (req, res) => {
-    console.log(req.query)
-});
-
 app.get('/api/search', celebrate({
     query: Joi.object({
         site: Joi.string()
@@ -77,7 +73,7 @@ app.get('/api/search', celebrate({
         }
         if (response.status === 200) {
             // return res.json(response).status(200);
-            res.render("index", {
+            res.render("searchResult", {
                 response: response
             });
         } else {
