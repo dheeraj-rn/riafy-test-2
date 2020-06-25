@@ -67,7 +67,7 @@ app.get('/api/search', celebrate({
         const mongoServiceInstance = new mongoService(connection);
         let savedSearch = await mongoServiceInstance.fetch(
             site,
-            query
+            query.toLowerCase()
         );
         if (savedSearch.status === 200 && savedSearch.count > 0) {
             response.saved = savedSearch.data.map((data) => {
@@ -103,7 +103,7 @@ app.post('/api/save',
         const mongoServiceInstance = new mongoService(connection);
         let response = await mongoServiceInstance.insert({
             site,
-            query,
+            query: query.toLowerCase(),
             links
         });
         if (response.status === 200) {
