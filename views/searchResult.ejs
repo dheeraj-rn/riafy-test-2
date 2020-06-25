@@ -13,7 +13,7 @@
             <% if(typeof response !='undefined' ){ %>
             <% if(response.status === 200 && response.data.length > 0 ){ %>
 
-            <form action="/api/test" method="post">
+            <form action="/api/save" method="post">
 
                 <ul class="collection center-align">
                     <% let i=0; response.data.forEach((link)=>{ %>
