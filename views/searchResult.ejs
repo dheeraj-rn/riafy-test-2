@@ -19,8 +19,12 @@
                     <% let i=0; response.data.forEach((link)=>{ %>
                     <li class="collection-item">
                         <% let j = i++; %>
-                        <input name="<%= j %>" type="checkbox" id="<%= j %>" value="<%= link %>" />
-                        <img class="responsive-img" width="auto" src="<%= link %>">
+                        <label>
+                            <input name="<%= j %>" type="checkbox" id="<%= j %>" value="<%= link %>" />
+                            <span>
+                            </span>
+                            <img class="responsive-img" width="auto" src="<%= link %>">
+                        </label>
                     </li>
                     <% }); %>
                 </ul>
