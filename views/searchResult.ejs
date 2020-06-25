@@ -12,10 +12,8 @@
         <div class="container center-align">
             <% if(typeof response !='undefined' ){ %>
             <% if(response.status === 200 && response.data.length > 0 ){ %>
-
             <form action="/api/save" method="post">
-
-                <!-- <ul class="collection center-align">
+                <ul class="collection center-align">
                     <% let i=0; response.data.forEach((link)=>{ %>
                     <li class="collection-item">
                         <% let j = i++; %>
@@ -27,24 +25,7 @@
                         </label>
                     </li>
                     <% }); %>
-                </ul> -->
-
-
-                <div class="row">
-                    <% let k=0; response.data.forEach((link)=>{ %>
-                    <div class="col s1">
-                        <% let j = k++; %>
-                        <label>
-                            <input name="<%= j %>" type="checkbox" id="<%= j %>" value="<%= link %>" />
-                            <span>
-                            </span>
-                            <img class="responsive-img" width="auto" src="<%= link %>">
-                        </label>
-                    </div>
-                    <% }); %>
-                </div>
-
-
+                </ul>
                 <input type="hidden" name="site" value="<%= response.search.site %>" />
                 <input type="hidden" name="query" value="<%= response.search.query %>" />
                 <div class="center-align">
