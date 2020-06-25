@@ -5,6 +5,8 @@ const gifService = require('./gif');
 const mongoService = require('./mongo');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+var multer = require('multer');
+var upload = multer();
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,6 +25,10 @@ connection.once('open', () => {
 });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+})); // for parsing application/x-www-form-urlencoded
+app.use(upload.array());
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
@@ -81,25 +87,19 @@ app.get('/api/search', celebrate({
         }
     });
 
-app.post('/api/save', celebrate({
-    body: Joi.object({
-        site: Joi.string()
-            .valid('tenor')
-            .valid('giphy')
-            .required()
-            .error(new Error('Invalid website')),
-        query: Joi.string()
-            .required()
-            .error(new Error('Invalid query')),
-        links: Joi.array().items(Joi.string())
-            .required()
-            .error(new Error('Invalid array')),
-    })
-        .options({ stripUnknown: true })
-        .label('database-insert-api'),
-}),
+app.post('/api/save',
     async (req, res, next) => {
-        const { site, query, links } = req.body;
+        let data = req.body;
+        let site = data.site;
+        let query = data.query;
+        delete data.site;
+        delete data.query;
+        let keys = Object.keys(data);
+        let links = [];
+        keys.forEach((key) => {
+            links.push(data[key]);
+        });
+
         const mongoServiceInstance = new mongoService(connection);
         let response = await mongoServiceInstance.insert({
             site,
@@ -107,7 +107,10 @@ app.post('/api/save', celebrate({
             links
         });
         if (response.status === 200) {
-            return res.json(response).status(200);
+            // return res.json(response).status(200);
+            res.render("index2", {
+                toast: 'Saved!'
+            });
         } else {
             next(response);
         }
